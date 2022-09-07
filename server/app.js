@@ -1,21 +1,37 @@
-import express  from "express";
+import express from "express";
+import mongoose from "mongoose";
 import morgan from "morgan";
-import dotenv from 'dotenv';
-import cors from 'cors';
+import dotenv from "dotenv";
+import cors from "cors";
+import gatewayRouter from "./routes/gateways.router.js";
+import peripheralRouter from "./routes/peripheral.router.js";
 
-dotenv.config()
-const port=process.env.PORT || 5000;
+// Get Env values
+dotenv.config();
+const DB_URL = process.env.DATABASE_URL || "mongodb://localhost/gateway-maganament";
+
+//DB Connection
+mongoose.connect(DB_URL);
+const db = mongoose.connection;
+db.on("Error", (error) => console.error(error));
+db.once("open", () => console.log("Connected to database!!!"));
 
 const app = express();
 
+//Middlewares
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req,res)=>{
-    res.send("Hello World")
+app.get("/", (req, res) => {
+  res.send("Hello World");
 });
 
-app.listen(port);
-console.log(`Server running on port: ${port}`);
+// Routes
+app.use("/gateways", gatewayRouter);
+app.use("/peripherals", peripheralRouter);
+
+export default app
+
+
