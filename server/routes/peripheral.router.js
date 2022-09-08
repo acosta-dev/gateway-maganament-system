@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    console.log('calling')
   try {
     const peripherals = await Peripheral.find();
     res.status(200).json(peripherals);
@@ -84,7 +83,7 @@ router.patch("/:id", async (req, res) => {
         } else return res.status(404).json({ message: "Gateway not found!" });
       }
       await peripheral.save();
-      res.status(200).json({ message: peripheral });
+      res.status(200).json( peripheral );
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
