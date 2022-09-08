@@ -8,7 +8,10 @@ import peripheralRouter from "./routes/peripheral.router.js";
 
 // Get Env values
 dotenv.config();
-const DB_URL = process.env.DATABASE_URL || "mongodb://localhost/gateway-maganament";
+// if on test enviroment use a test database
+const DB_URL = process.env.NODE_ENV === 'test'
+    ? process.env.DATABASE_URL_TEST
+    : process.env.DATABASE_URL
 
 //DB Connection
 mongoose.connect(DB_URL);
