@@ -38,6 +38,13 @@ router.post("/", async (req, res) => {
   const gateway = await Gateway.findById(req.body.gateway);
   if (!gateway) return res.status(404).json({ message: "Gateway not found" });
 
+  //Check for peripheral UNIQUE ID
+  const findPeripheralUID = await Peripheral.find({ uid: req.body.uid });
+  console.log(findPeripheralUID);
+  if (findPeripheralUID.length > 0) {
+    return res.status(400).json({ message: "Peripheral UID must be unique" });
+  }
+
   //Check if not reached max peripherals (10)
   const peripherals = await Peripheral.find({ gateway: req.body.gateway });
   if (peripherals.length == 10)
@@ -52,7 +59,6 @@ router.post("/", async (req, res) => {
     status: req.body.status,
     gateway: req.body.gateway,
   });
-  
 
   try {
     const newPeripheral = await peripheral.save();
@@ -66,6 +72,18 @@ router.patch("/:id", async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: "Invalid Id format!" });
   }
+
+  let countUID = 0;
+  Peripheral.find({ uid: req.body.uid }).exec(function (err, results) {
+    var count = results.length;
+    countUID = count;
+  });
+  if (countUID > 0) {
+    return res
+      .status(400)
+      .json({ message: "Another peripheral has the same UID!" });
+  }
+
   const peripheral = await Peripheral.findById(req.params.id);
   if (peripheral) {
     try {
@@ -83,7 +101,7 @@ router.patch("/:id", async (req, res) => {
         } else return res.status(404).json({ message: "Gateway not found!" });
       }
       await peripheral.save();
-      res.status(200).json( peripheral );
+      res.status(200).json(peripheral);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

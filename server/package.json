@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "cross-env-shell NODE_ENV=development nodemon index.js",
     "start": "cross-env-shell NODE_ENV=production node index.js",
-    "test": "cross-env-shell NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules && jest --detectOpenHandles --watchAll",
-    "greet": "cross-env-shell GREETING=Hi NAME=Joe \"echo $GREETING && echo $NAME\""
+    "test": "cross-env-shell NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules && jest --detectOpenHandles --watchAll"
   },
   "keywords": [],
   "author": "",

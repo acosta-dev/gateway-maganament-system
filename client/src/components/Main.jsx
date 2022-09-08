@@ -1,7 +1,6 @@
-import Axios from "axios";
 import { React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { AllGateways, DeleteGatewayByID } from "../utils/api.js";
 
 // Icons
 import { FaTrashAlt } from "react-icons/fa";
@@ -13,18 +12,18 @@ const Main = () => {
 
   const deleteGateway = async (id) => {
     //Delete gateway by id
-    const res = await Axios.delete(`http://localhost:5000/gateways/${id}`);
+    const response = await DeleteGatewayByID(id);
+
     //Remove the gateway from the state
     setGateways(
-      gateways.filter((gateway) => gateway._id !== res.data.data._id)
+      gateways.filter((gateway) => gateway._id !== response.data._id)
     );
   };
 
   useEffect(() => {
     const fetchData = async () => {
       //Get all gateways
-      const { data } = await Axios.get("http://localhost:5000/gateways/");
-      setGateways(data);
+      setGateways(await AllGateways());
     };
     fetchData();
   }, []);
@@ -44,8 +43,7 @@ const Main = () => {
                 navigate("/new_gateway");
               }}
               className="mb-2 cursor-pointer"
-            >
-            </div>
+            ></div>
           </div>
           <div className="py-0 justify-center text-left">
             <div className=" ">

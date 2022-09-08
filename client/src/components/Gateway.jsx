@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Axios from "axios";
+import { GatewayByID, DeleteGatewayByID, DeletePeripheralByID } from "../utils/api.js";
 
 //Utils
 import { ToastContainer } from "react-toastify";
@@ -18,10 +18,11 @@ const Gateway = () => {
   const [gatewayName, setGatewayName] = useState("");
   const [peripherals, setPeripherals] = useState([{}]);
 
+ 
   const deleteGateway = async (id) => {
     try {
       //Delete Gateway by ID
-      await Axios.delete(`http://localhost:5000/gateways/${id}`);
+      await DeleteGatewayByID(id);
       //Go home after delete
       navigate("/");
     } catch (error) {
@@ -32,7 +33,7 @@ const Gateway = () => {
   const deletePeripheral = async (id) => {
     try {
       //Delete peripheral
-      await Axios.delete(`http://localhost:5000/peripherals/${id}`);
+      DeletePeripheralByID(id);
       setPeripherals(
         peripherals.filter((peripherals) => peripherals._id !== id)
       );
@@ -44,14 +45,21 @@ const Gateway = () => {
   useEffect(() => {
     //Get all peripherals for the gateway
     const fetchData = async () => {
-      const { data } = await Axios.get(`http://localhost:5000/gateways/${id}`);
+      const response = await GatewayByID(id);
       // Set states
-      setGatewayName(data.gateway.name);
-      console.log(data);
-      setPeripherals(data.peripheral);
+      setGatewayName(response.gateway.name);
+      setPeripherals(response.peripheral);
     };
     fetchData();
   }, [id]);
+
+  const addPeripheralHandler=(id)=>{
+    if(peripherals.length===10){
+      notifyError('Gateways cannot have more than 10 peripherals!!!')
+    }else{
+      navigate(`/new_peripheral/${id}`)
+    }
+  }
 
   return (
     <div className="text-white flex justify-center">
@@ -80,7 +88,8 @@ const Gateway = () => {
         <div className="mb-4">
             <button
               onClick={() => {
-                navigate(`/new_peripheral/${id}`);
+                addPeripheralHandler(id)
+                // navigate(`/new_peripheral/${id}`);
               }}
               className="flex bg-green-700 w-[180px] justify-center rounded font-bold cursor-pointer"
             >

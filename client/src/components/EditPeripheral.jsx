@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Axios from "axios";
+import { UpdatePeripheral, PeripheralByID } from "../utils/api.js";
 
 //Utils
 import { notifyError } from "../utils/messages";
@@ -23,12 +23,13 @@ const EditPeripheral = () => {
     e.preventDefault();
     try {
       //Save changes
-      await Axios.patch(`http://localhost:5000/peripherals/${id}`, {
-        uid: uid,
-        vendor: vendor,
-        status: status,
-        gateway: gateway,
-      });
+      await UpdatePeripheral(id,uid, vendor, status, gateway);
+      // await Axios.patch(`http://localhost:5000/peripherals/${id}`, {
+      //   uid: uid,
+      //   vendor: vendor,
+      //   status: status,
+      //   gateway: gateway,
+      // });
       navigate(-1);
     } catch (error) {
       notifyError(error.response.data.message);
@@ -38,14 +39,15 @@ const EditPeripheral = () => {
   useEffect(() => {
     // Load peripheral data
     const fetchData = async () => {
-      const { data } = await Axios.get(
-        `http://localhost:5000/peripherals/${id}`
-      );
+      // const { data } = await Axios.get(
+      //   `http://localhost:5000/peripherals/${id}`
+      // );
+      const response = await PeripheralByID(id)
       // Set peripheral data on state
-      setUid(data.uid);
-      setVendor(data.vendor);
-      setStatus(data.status);
-      setGateway(data.gateway._id);
+      setUid(response.uid);
+      setVendor(response.vendor);
+      setStatus(response.status);
+      setGateway(response.gateway._id);
     };
     fetchData();
   }, [id]);

@@ -4,11 +4,11 @@ const peripheralSchema = new mongoose.Schema({
     uid: {
       type: Number,
       unique: true,
-      required: true,
+      required: [true, "UID is required!"],
     },
     vendor: {
       type: String,
-      required: true,
+      required: [true, "Vendor is required!"],
     },
     created_date: {
       type: Date,
@@ -23,6 +23,14 @@ const peripheralSchema = new mongoose.Schema({
     gateway: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Gateway"
+    }
+  });
+
+  peripheralSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      next(new Error('UID must be unique!!!'));
+    } else {
+      next();
     }
   });
 

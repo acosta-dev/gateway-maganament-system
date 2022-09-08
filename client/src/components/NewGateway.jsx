@@ -1,6 +1,6 @@
 import { React, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import Axios from "axios";
+import { CreateGateway } from "../utils/api.js";
 
 //Utils
 import { notifyError } from "../utils/messages";
@@ -20,15 +20,20 @@ const NewGateway = () => {
 
     const handleSubmit= async (e) => {
         e.preventDefault();
-        try {
+      
             //Create the new gateway and return home
-            await Axios.post("http://localhost:5000/gateways/",{uid:uid,name:name,ipv4:ipv4})
-            navigate('/')
-        } catch (error) {
-            console.log(error.response.data);
-            notifyError(error.response.data.Message)
-        }
-    }
+            try {
+                await CreateGateway(uid,name,ipv4)
+                
+                navigate('/')
+            } catch (error) {
+                console.log(error);
+                notifyError(error.response.data.message)
+            }
+            }
+            //Return Home
+       
+   
   return (
     <div className="flex justify-center  text-white ">
         <ToastContainer />
