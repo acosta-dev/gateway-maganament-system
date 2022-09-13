@@ -1,4 +1,4 @@
-import app from "../app.js";
+import {app} from "../app.js";
 import request from "supertest";
 import Gateway from "../models/gateway.model.js";
 import Peripheral from "../models/peripheral.model.js";
