@@ -8,6 +8,7 @@ Requirements:
 - NPM \>= 6.14.17.
 - A MongoDB server (Can be locally installed, or in the cloud, for example Mongo Atlas).
 
+A database "gateway-maganament" on the mongoDB server.
 Server:
 
 1. Open a terminal and go to the server directory.
