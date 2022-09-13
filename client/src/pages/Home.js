@@ -259,7 +259,7 @@ const Home = () => {
             <div>
               <TextField
                 className="w-full"
-                type="text"
+                type="number"
                 label="UID"
                 name="uid"
                 value={uid}
