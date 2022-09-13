@@ -20,4 +20,5 @@ Client:
 
 1. Open a terminal and go to the client directory.
 2. Execute "npm install" to install all dependencies.
-3. Execute "npm start" in the terminal to run the application.
+3. Inside the client app on the route src->-api->gateway.js and peripherals.js can be found on line #2 the api base url endpoint, it must be changed if needed.
+4. Execute "npm start" in the terminal to run the application.
